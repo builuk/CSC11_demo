@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тема пари 7. Responsive Design: Mobile First, viewport, media queries, одиниці вимірювання</title>
+<style>
+:root{
+  --bg:#f5f7fb;--card:#fff;--text:#1f2937;--muted:#4b5563;--accent:#1d4ed8;--border:#dbe4f0;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.72}
+.wrapper{max-width:1240px;margin:0 auto;padding:30px 20px 60px}
+header{background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#fff;padding:28px;border-radius:22px;margin-bottom:24px}
+h1{margin:0 0 8px;font-size:34px} h2{margin:0 0 14px;font-size:26px} h3{margin:0 0 10px;font-size:21px} h4{margin:0 0 8px;font-size:17px}
+p{margin:0 0 12px}
+.section{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:20px;box-shadow:0 8px 24px rgba(15,23,42,.05)}
+.subsection{margin-top:18px;padding-top:18px;border-top:1px solid #e7edf5}
+.preview{margin-top:12px;background:#f8fbff;border:1px dashed #bfd2f8;border-radius:16px;padding:18px;overflow:auto}
+.code{margin-top:10px;background:#0f172a;color:#e2e8f0;padding:16px;border-radius:14px;overflow:auto;white-space:pre-wrap;font-family:Consolas,Monaco,monospace;font-size:14px}
+.note,.tip{margin-top:12px;padding:12px 14px;border-radius:12px}
+.note{background:#eff6ff;border-left:4px solid var(--accent)}
+.tip{background:#f8fafc;border:1px solid #dbeafe}
+ul,ol{margin:0;padding-left:24px}
+li{margin-bottom:8px}
+.badge{display:inline-block;margin-top:10px;background:#dbeafe;color:#1e40af;padding:6px 10px;border-radius:999px;font-size:14px}
+.meta{color:#e8efff;font-size:15px}
+.footer{color:var(--muted);font-size:14px;text-align:center;margin-top:6px}
+a{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border:1px solid var(--border);padding:10px 12px;text-align:left;vertical-align:top}
+th{background:#f8fafc}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <h1>Тема пари 7. Responsive Design: Mobile First, viewport, media queries, одиниці вимірювання</h1>
+  <div class="meta">Розширена версія з адаптивною версткою, одиницями вимірювання та повними прикладами</div>
+  <div class="badge">Теорія, пояснення, готові приклади, практика і домашня робота</div>
+</header>
+
+<section class="section">
+  <h2>Тема пари</h2>
+  <p>В ході пари ми познайомимось із підходом Mobile First, роботою viewport, медіа-запитами, принципами адаптивної верстки та одиницями вимірювання в CSS: <code>px</code>, <code>%</code>, <code>em</code>, <code>rem</code>, <code>vw</code>, <code>vh</code>, <code>vmin</code>, <code>vmax</code>.</p>
+  <div class="note">Усі приклади нижче подані як самодостатні фрагменти або як повні HTML-документи, які можна копіювати в окремий файл і запускати без додаткового контексту.</div>
+</section>
+
+<section class="section">
+  <h2>Короткий теоретичний блок</h2>
+  <p>Responsive Design зручніше будувати поступово: від малого екрана до більшого.</p><p>Media queries мають з’являтися там, де це потрібно контенту, а не заради самої кількості breakpoints.</p>
+</section>
+
+<section class="section"><h2>Детальні приклади</h2><div class="subsection"><h3>Приклад 1. Mobile First — одна колонка</h3><p>Базові стилі спочатку пишуть для малого екрана.</p><div class="preview"><div style="display:grid; grid-template-columns:1fr; gap:12px;">
+<div style="padding:16px; background:#dbeafe; border-radius:12px;">Картка 1</div>
+<div style="padding:16px; background:#dbeafe; border-radius:12px;">Картка 2</div>
+<div style="padding:16px; background:#dbeafe; border-radius:12px;">Картка 3</div>
+</div></div><h4>Повний приклад коду</h4><div class="code">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;uk&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Mobile first&lt;/title&gt;
+
+  &lt;style&gt;
+
+body { font-family: Arial, sans-serif; padding: 30px; }
+.cards { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.cards div { padding: 16px; background: #dbeafe; border-radius: 12px; }
+
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class=&quot;cards&quot;&gt;
+  &lt;div&gt;Картка 1&lt;/div&gt;
+  &lt;div&gt;Картка 2&lt;/div&gt;
+  &lt;div&gt;Картка 3&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</div></div><div class="subsection"><h3>Приклад 2. viewport у HTML</h3><p>Без коректного viewport мобільна версія часто виглядає неприродно.</p><div class="preview"><div class="note">Нижче подано повний HTML-шаблон із правильним viewport.</div></div><h4>Повний приклад коду</h4><div class="code">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;uk&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Viewport&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;p&gt;Сторінка з коректним viewport.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div></div><div class="subsection"><h3>Приклад 3. 1 колонка → 2 колонки</h3><p>Коли ширини стає більше, можна додати breakpoint і перебудувати сітку.</p><div class="preview"><div class="note">Цей приклад краще дивитися в браузері, змінюючи ширину вікна.</div></div><h4>Повний приклад коду</h4><div class="code">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;uk&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Responsive 2 cols&lt;/title&gt;
+
+  &lt;style&gt;
+
+body { font-family: Arial, sans-serif; padding: 30px; }
+.cards { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.cards div { padding: 16px; background: #dbeafe; border-radius: 12px; }
+
+@media (min-width: 700px) {
+  .cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class=&quot;cards&quot;&gt;
+  &lt;div&gt;Картка 1&lt;/div&gt;
+  &lt;div&gt;Картка 2&lt;/div&gt;
+  &lt;div&gt;Картка 3&lt;/div&gt;
+  &lt;div&gt;Картка 4&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</div></div><div class="subsection"><h3>Приклад 4. 1 колонка → 2 → 4</h3><p>Такий патерн часто використовують для послуг, курсів і товарів.</p><div class="preview"><div class="note">Змінюйте ширину вікна, щоб побачити перебудову.</div></div><h4>Повний приклад коду</h4><div class="code">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;uk&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Responsive 1-2-4&lt;/title&gt;
+
+  &lt;style&gt;
+
+body { font-family: Arial, sans-serif; padding: 30px; }
+.cards { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.cards div { padding: 16px; background: #dbeafe; border-radius: 12px; }
+
+@media (min-width: 700px) {
+  .cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1000px) {
+  .cards { grid-template-columns: repeat(4, 1fr); }
+}
+
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class=&quot;cards&quot;&gt;
+  &lt;div&gt;Картка 1&lt;/div&gt;
+  &lt;div&gt;Картка 2&lt;/div&gt;
+  &lt;div&gt;Картка 3&lt;/div&gt;
+  &lt;div&gt;Картка 4&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</div></div><div class="subsection"><h3>Приклад 5. orientation</h3><p>Іноді зручно реагувати не лише на ширину, а й на орієнтацію екрана.</p><div class="preview"><div class="note">Приклад для ознайомлення: перевіряти краще на реальному пристрої або в devtools.</div></div><h4>Повний приклад коду</h4><div class="code">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;uk&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Orientation&lt;/title&gt;
+
+  &lt;style&gt;
+
+body { font-family: Arial, sans-serif; padding: 30px; }
+.box { padding: 18px; background: #dbeafe; border-radius: 12px; }
+
+@media (orientation: landscape) {
+  .box { background: #bbf7d0; }
+}
+
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class=&quot;box&quot;&gt;Змініть орієнтацію екрана&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</div></div></section>
+
+
+<section class="section">
+  <h2>Розширений теоретичний блок</h2>
+  <p>Responsive Design — це не просто набір медіа-запитів, а спосіб мислити сторінкою так, щоб вона залишалася читабельною і зручною на різних екранах. Саме тому адаптивність краще закладати від початку, а не додавати в останній момент.</p>
+  <div class="subsection">
+    <h3>Mobile First як стратегія</h3>
+    <p>Починати з малого екрана зручно, бо це змушує одразу виділити головне: порядок блоків, ширину, читабельність, відступи. Після цього макет легше розширювати через <code>min-width</code>, ніж навпаки — намагатися «згорнути» складну десктопну версію.</p>
+  </div>
+  <div class="subsection">
+    <h3>viewport як базова умова</h3>
+    <p>Без коректного viewport сторінка на мобільному виглядає неприродно зменшеною. Це одна з тих дрібниць, без яких адаптивний дизайн технічно буде неповним.</p>
+  </div>
+  <div class="subsection">
+    <h3>Media queries і breakpoints</h3>
+    <p>Медіа-запити варто додавати не заради самої їх наявності, а тоді, коли контент починає виглядати незручно: картки стають надто вузькими, текст стискається, блоки злипаються або виникає зайва порожнеча. Саме тому breakpoint краще вибирати по контенту, а не по назві пристрою.</p>
+  </div>
+</section>
+
+
+
+<section class="section">
+  <h2>Адаптивна верстка: що саме має змінюватися</h2>
+  <p>Адаптивна верстка — це підхід, за якого сторінка не просто «зменшується» на маленькому екрані, а перебудовується так, щоб не втрачати зручність. На різних ширинах можуть змінюватися кількість колонок, розмір шрифту, відступи, порядок блоків, ширина зображень, розмір кнопок і навіть спосіб показу меню.</p>
+  <p>Головна ідея: користувач не повинен збільшувати сторінку пальцями, горизонтально прокручувати текст або шукати важливий блок, який «поїхав» за межі екрана.</p>
+
+  <div class="subsection">
+    <h3>Що найчастіше адаптують</h3>
+    <ul>
+      <li><strong>Сітку сторінки:</strong> 1 колонка на телефоні, 2 на планшеті, 3–4 на десктопі.</li>
+      <li><strong>Меню:</strong> на великому екрані горизонтальне, на малому — вертикальне або компактне.</li>
+      <li><strong>Картки:</strong> на телефоні займають всю ширину, на десктопі стоять у ряд.</li>
+      <li><strong>Зображення:</strong> не виходять за межі контейнера, мають <code>max-width: 100%</code>.</li>
+      <li><strong>Типографіку:</strong> заголовки і текст не мають бути надто великими або надто дрібними.</li>
+      <li><strong>Відступи:</strong> на маленьких екранах їх часто зменшують, щоб не витрачати простір.</li>
+    </ul>
+  </div>
+
+  <div class="tip">Важливо: адаптивність — це не лише <code>@media</code>. Частину адаптивності можна зробити одразу через <code>max-width</code>, <code>width: 100%</code>, <code>flex-wrap</code>, <code>auto-fit</code>, <code>minmax()</code> та відносні одиниці вимірювання.</div>
+</section>
+
+<section class="section">
+  <h2>Одиниці вимірювання в CSS</h2>
+  <p>У CSS є абсолютні та відносні одиниці. Для адаптивної верстки важливо розуміти, коли краще використовувати фіксовані значення, а коли — значення, які залежать від екрана, контейнера або розміру шрифту.</p>
+
+  <table>
+    <tr>
+      <th>Одиниця</th>
+      <th>Що означає</th>
+      <th>Де зручно використовувати</th>
+    </tr>
+    <tr>
+      <td><code>px</code></td>
+      <td>Пікселі. Фіксована одиниця.</td>
+      <td>Тонкі рамки, точні іконки, невеликі елементи, border-radius.</td>
+    </tr>
+    <tr>
+      <td><code>%</code></td>
+      <td>Відсоток від розміру батьківського елемента.</td>
+      <td>Ширина блоків, зображення, колонки.</td>
+    </tr>
+    <tr>
+      <td><code>em</code></td>
+      <td>Залежить від розміру шрифту поточного елемента.</td>
+      <td>Внутрішні відступи кнопок, елементи, які мають масштабуватися разом із текстом.</td>
+    </tr>
+    <tr>
+      <td><code>rem</code></td>
+      <td>Залежить від розміру шрифту кореневого елемента <code>html</code>.</td>
+      <td>Загальні відступи, розміри шрифтів, стабільна система розмірів на сайті.</td>
+    </tr>
+    <tr>
+      <td><code>vw</code></td>
+      <td>1% від ширини viewport.</td>
+      <td>Адаптивні hero-блоки, великі заголовки, елементи, залежні від ширини екрана.</td>
+    </tr>
+    <tr>
+      <td><code>vh</code></td>
+      <td>1% від висоти viewport.</td>
+      <td>Перший екран сайту, секції на всю висоту екрана.</td>
+    </tr>
+    <tr>
+      <td><code>vmin</code></td>
+      <td>1% від меншої сторони viewport.</td>
+      <td>Елементи, які мають однаково добре виглядати і в портретній, і в альбомній орієнтації.</td>
+    </tr>
+    <tr>
+      <td><code>vmax</code></td>
+      <td>1% від більшої сторони viewport.</td>
+      <td>Великі декоративні елементи, фонові форми, масштабні блоки.</td>
+    </tr>
+  </table>
+
+  <div class="subsection">
+    <h3>Коротке правило вибору</h3>
+    <ul>
+      <li><code>px</code> — коли потрібна точність.</li>
+      <li><code>%</code> — коли елемент має залежати від ширини батьківського блоку.</li>
+      <li><code>em</code> — коли відступи мають масштабуватися від розміру тексту самого елемента.</li>
+      <li><code>rem</code> — коли потрібна єдина система розмірів на всій сторінці.</li>
+      <li><code>vw</code> і <code>vh</code> — коли елемент має залежати від розміру вікна браузера.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Приклади з одиницями вимірювання</h2>
+
+  <div class="subsection">
+    <h3>Приклад 6. Відсотки для адаптивної ширини</h3>
+    <p>Блок має займати всю доступну ширину, але не бути надто широким на великому екрані. Для цього часто комбінують <code>width: 100%</code> і <code>max-width</code>.</p>
+    <div class="preview">
+      <div style="width:100%; max-width:620px; padding:18px; background:#dbeafe; border-radius:14px;">Цей блок займає всю доступну ширину, але має обмеження max-width.</div>
+    </div>
+    <h4>Повний приклад коду</h4>
+    <div class="code">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;uk&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Width and max-width&lt;/title&gt;
+
+  &lt;style&gt;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  padding: 24px;
+}
+
+.card {
+  width: 100%;
+  max-width: 620px;
+  padding: 20px;
+  background: #dbeafe;
+  border-radius: 14px;
+}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class=&quot;card&quot;&gt;
+  Блок адаптується під ширину екрана, але не стає занадто широким.
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</div>
+  </div>
+
+  <div class="subsection">
+    <h3>Приклад 7. rem для стабільної системи відступів</h3>
+    <p><code>rem</code> зручно використовувати для розмірів, які мають бути однаковими по всій сторінці. Якщо змінити базовий розмір шрифту в <code>html</code>, пропорційно зміняться всі значення в <code>rem</code>.</p>
+    <div class="preview">
+      <div style="font-size:1rem; padding:1.5rem; background:#e0f2fe; border-radius:1rem;">padding: 1.5rem; border-radius: 1rem;</div>
+    </div>
+    <h4>Повний приклад коду</h4>
+    <div class="code">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;uk&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;rem units&lt;/title&gt;
+
+  &lt;style&gt;
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  padding: 2rem;
+}
+
+.card {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: #e0f2fe;
+}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class=&quot;card&quot;&gt;
+  rem допомагає будувати єдину систему розмірів.
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</div>
+  </div>
+
+  <div class="subsection">
+    <h3>Приклад 8. em для кнопки</h3>
+    <p><code>em</code> залежить від розміру шрифту самого елемента. Тому кнопка з <code>padding</code> в <code>em</code> збільшується разом із текстом.</p>
+    <div class="preview">
+      <button style="font-size:18px; padding:.8em 1.4em; border:0; border-radius:.8em; background:#1d4ed8; color:white;">Кнопка</button>
+    </div>
+    <h4>Повний приклад коду</h4>
+    <div class="code">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;uk&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;em button&lt;/title&gt;
+
+  &lt;style&gt;
+body {
+  font-family: Arial, sans-serif;
+  padding: 30px;
+}
+
+.button {
+  font-size: 20px;
+  padding: 0.8em 1.4em;
+  border: none;
+  border-radius: 0.8em;
+  background: #1d4ed8;
+  color: white;
+}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;button class=&quot;button&quot;&gt;Записатися&lt;/button&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</div>
+  </div>
+
+  <div class="subsection">
+    <h3>Приклад 9. vh для першого екрана</h3>
+    <p><code>vh</code> часто використовують для першого екрана сайту. Наприклад, <code>min-height: 100vh</code> дозволяє зробити секцію не меншою за висоту вікна браузера.</p>
+    <div class="preview">
+      <div style="min-height:220px; display:grid; place-items:center; background:#dbeafe; border-radius:16px;">У реальному прикладі це може бути min-height: 100vh</div>
+    </div>
+    <h4>Повний приклад коду</h4>
+    <div class="code">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;uk&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Hero with vh&lt;/title&gt;
+
+  &lt;style&gt;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.hero {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: #dbeafe;
+  text-align: center;
+}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;section class=&quot;hero&quot;&gt;
+  &lt;div&gt;
+    &lt;h1&gt;Адаптивний перший екран&lt;/h1&gt;
+    &lt;p&gt;Секція займає всю висоту viewport.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</div>
+  </div>
+
+  <div class="subsection">
+    <h3>Приклад 10. Адаптивний розмір тексту через clamp()</h3>
+    <p><code>clamp()</code> дозволяє задати мінімальне, бажане і максимальне значення. Це зручно для заголовків, які мають плавно змінюватися залежно від ширини екрана.</p>
+    <div class="preview">
+      <h3 style="font-size:clamp(24px, 5vw, 54px); margin:0;">Адаптивний заголовок</h3>
+    </div>
+    <h4>Повний приклад коду</h4>
+    <div class="code">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;uk&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;clamp title&lt;/title&gt;
+
+  &lt;style&gt;
+body {
+  font-family: Arial, sans-serif;
+  padding: 30px;
+}
+
+h1 {
+  font-size: clamp(28px, 6vw, 64px);
+}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;h1&gt;Заголовок плавно змінює розмір&lt;/h1&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Адаптивність без зайвих media queries</h2>
+  <p>Не кожна адаптивна поведінка потребує окремого breakpoint. Часто можна написати гнучкий код, який сам підлаштовується під доступну ширину.</p>
+
+  <div class="subsection">
+    <h3>Приклад 11. Grid з auto-fit і minmax()</h3>
+    <p>Картки самі переходять на новий ряд, коли їм не вистачає місця. Це один із найзручніших способів робити адаптивні секції.</p>
+    <div class="preview">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px;">
+        <div style="padding:16px; background:#dbeafe; border-radius:12px;">HTML</div>
+        <div style="padding:16px; background:#dbeafe; border-radius:12px;">CSS</div>
+        <div style="padding:16px; background:#dbeafe; border-radius:12px;">Grid</div>
+        <div style="padding:16px; background:#dbeafe; border-radius:12px;">Responsive</div>
+      </div>
+    </div>
+    <h4>Повний приклад коду</h4>
+    <div class="code">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;uk&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;auto-fit grid&lt;/title&gt;
+
+  &lt;style&gt;
+body {
+  font-family: Arial, sans-serif;
+  padding: 30px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  padding: 20px;
+  background: #dbeafe;
+  border-radius: 14px;
+}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class=&quot;cards&quot;&gt;
+  &lt;div class=&quot;card&quot;&gt;HTML&lt;/div&gt;
+  &lt;div class=&quot;card&quot;&gt;CSS&lt;/div&gt;
+  &lt;div class=&quot;card&quot;&gt;Grid&lt;/div&gt;
+  &lt;div class=&quot;card&quot;&gt;Responsive&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</div>
+  </div>
+
+  <div class="subsection">
+    <h3>Приклад 12. Flexbox з flex-wrap</h3>
+    <p><code>flex-wrap: wrap</code> дозволяє елементам переноситися на новий ряд. Це корисно для тегів, кнопок, меню, списків категорій.</p>
+    <div class="preview">
+      <div style="display:flex; flex-wrap:wrap; gap:10px;">
+        <span style="padding:8px 12px; background:#dbeafe; border-radius:999px;">HTML</span>
+        <span style="padding:8px 12px; background:#dbeafe; border-radius:999px;">CSS</span>
+        <span style="padding:8px 12px; background:#dbeafe; border-radius:999px;">Flexbox</span>
+        <span style="padding:8px 12px; background:#dbeafe; border-radius:999px;">Grid</span>
+        <span style="padding:8px 12px; background:#dbeafe; border-radius:999px;">Responsive</span>
+      </div>
+    </div>
+    <h4>Повний приклад коду</h4>
+    <div class="code">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;uk&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;flex-wrap&lt;/title&gt;
+
+  &lt;style&gt;
+body {
+  font-family: Arial, sans-serif;
+  padding: 30px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tag {
+  padding: 0.6em 1em;
+  background: #dbeafe;
+  border-radius: 999px;
+}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class=&quot;tags&quot;&gt;
+  &lt;span class=&quot;tag&quot;&gt;HTML&lt;/span&gt;
+  &lt;span class=&quot;tag&quot;&gt;CSS&lt;/span&gt;
+  &lt;span class=&quot;tag&quot;&gt;Flexbox&lt;/span&gt;
+  &lt;span class=&quot;tag&quot;&gt;Grid&lt;/span&gt;
+  &lt;span class=&quot;tag&quot;&gt;Responsive&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Типові помилки в адаптивній верстці</h2>
+  <ul>
+    <li>Фіксована ширина блоку, наприклад <code>width: 1200px</code>, через яку на мобільному з’являється горизонтальний скрол.</li>
+    <li>Зображення без <code>max-width: 100%</code>, які виходять за межі контейнера.</li>
+    <li>Занадто багато breakpoints без реальної потреби.</li>
+    <li>Занадто маленький текст на мобільному екрані.</li>
+    <li>Великі відступи на телефоні, які забирають половину екрана.</li>
+    <li>Використання тільки <code>px</code> там, де краще підійшли б <code>%</code>, <code>rem</code>, <code>vw</code> або <code>vh</code>.</li>
+  </ul>
+</section>
+
+<section class="section">
+  <h2>Практична робота на парі</h2>
+  <ol><li>Створіть секцію з картками за принципом Mobile First.</li><li>Додайте viewport у HTML.</li><li>Налаштуйте 1 колонку на мобільному, 2 на планшеті, 4 на десктопі.</li><li>Додайте адаптивну ширину через <code>width: 100%</code> і <code>max-width</code>.</li><li>Використайте <code>rem</code> для загальних відступів і <code>em</code> для кнопок.</li><li>Створіть hero-секцію з <code>min-height: 100vh</code>.</li><li>Зробіть один блок адаптивним без media queries через <code>repeat(auto-fit, minmax())</code>.</li><li>Поясніть, чому breakpoints краще обирати по контенту.</li></ol>
+</section>
+
+<section class="section">
+  <h2>Домашнє завдання</h2>
+  <ol><li>Створіть адаптивну сторінку для послуг, товарів, курсів або портфоліо.</li><li>Додайте header, hero-блок, секцію з картками, секцію з описом і footer.</li><li>На мобільному екрані основні блоки мають іти в одну колонку.</li><li>На середній ширині картки мають перебудовуватися у дві колонки.</li><li>На великій ширині картки мають перебудовуватися у три або чотири колонки.</li><li>Використайте мінімум один приклад з <code>rem</code>, <code>em</code>, <code>%</code>, <code>vw</code> або <code>vh</code>.</li><li>Додайте адаптивний заголовок через <code>clamp()</code>.</li><li>Перевірте сторінку в режимі responsive у DevTools.</li><li>На сторінці не має бути горизонтального скролу.</li></ol>
+</section>
+
+<div class="footer">Тема оформлена у зручному вигляді для роботи під час заняття і після нього.</div>
+</div>
+</body>
+</html>
